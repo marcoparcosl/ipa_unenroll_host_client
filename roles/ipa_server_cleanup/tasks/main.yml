@@ -15,7 +15,7 @@
     content: "{{ ipa_admin_password }}"
     dest: "{{ kinit_passfile.path }}"
     mode: "0600"
-  no_log: true
+  no_log: false
 
 - name: Obtener ticket Kerberos de admin
   ansible.builtin.shell: |
