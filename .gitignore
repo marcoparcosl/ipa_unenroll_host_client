@@ -1,0 +1,28 @@
+# Inventarios con datos sensibles
+inventory/hosts.ini
+
+# Archivos de contraseña
+.vault_pass
+.vault_password
+*.pass
+
+# Logs y reportes generados
+*.log
+*.retry
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
