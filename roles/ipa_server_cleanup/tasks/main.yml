@@ -8,7 +8,7 @@
     state: file
     prefix: kinit_
   register: kinit_passfile
-  no_log: true
+  no_log: false
 
 - name: Escribir contraseña en archivo temporal
   ansible.builtin.copy:
