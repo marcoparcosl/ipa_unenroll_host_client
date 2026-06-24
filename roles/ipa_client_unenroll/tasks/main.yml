@@ -18,7 +18,7 @@
 - name: Ejecutar ipa-client-uninstall
   ansible.builtin.command:
     cmd: >
-      ipa-client-uninstall --unattended
+      ipa-client --uninstall --unattended
       {{ '--force' if ipa_force_unenroll else '' }}
   when: ipa_conf.stat.exists
   register: unenroll_result
