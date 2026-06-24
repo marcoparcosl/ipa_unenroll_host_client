@@ -3,11 +3,33 @@
 # Tasks: ipa_server_cleanup — Elimina hosts del servidor FreeIPA / Red Hat IDM
 # =============================================================================
 
+- name: Crear archivo temporal de contraseña para kinit
+  ansible.builtin.tempfile:
+    state: file
+    prefix: kinit_
+  register: kinit_passfile
+  no_log: true
+
+- name: Escribir contraseña en archivo temporal
+  ansible.builtin.copy:
+    content: "{{ ipa_admin_password }}"
+    dest: "{{ kinit_passfile.path }}"
+    mode: "0600"
+  no_log: true
+
 - name: Obtener ticket Kerberos de admin
   ansible.builtin.shell: |
-    echo "{{ ipa_admin_password }}" | kinit {{ ipa_admin_user }}
+    kinit {{ ipa_admin_user }} < {{ kinit_passfile.path }}
   no_log: true
   changed_when: false
+  register: kinit_result
+  failed_when: kinit_result.rc != 0
+
+- name: Eliminar archivo temporal de contraseña
+  ansible.builtin.file:
+    path: "{{ kinit_passfile.path }}"
+    state: absent
+  no_log: true
 
 - name: Procesar cada host a eliminar
   ansible.builtin.include_tasks: remove_host.yml
