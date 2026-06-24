@@ -21,7 +21,6 @@
   roles:
     - role: ipa_client_unenroll
 
-
 - name: "FASE 2 | Eliminar host(s) del servidor IPA"
   hosts: ipa_servers
   become: true
