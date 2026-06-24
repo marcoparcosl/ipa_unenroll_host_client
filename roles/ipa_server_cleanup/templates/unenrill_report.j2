@@ -1,0 +1,17 @@
+# =============================================================================
+# Reporte de Desenrollamiento IPA
+# Generado por Ansible | rol: ipa_server_cleanup
+# Servidor IPA: {{ inventory_hostname }}
+# Fecha: {{ ansible_date_time.iso8601 | default('N/A') }}
+# =============================================================================
+
+Hosts procesados:
+{% for host in ipa_hosts_to_remove %}
+- {{ host }}
+{% endfor %}
+
+Configuración aplicada:
+Admin user : {{ ipa_admin_user }}
+Eliminar DNS : {{ ipa_remove_dns }}
+
+# Fin del reporte

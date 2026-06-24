@@ -1,0 +1,10 @@
+---
+# =============================================================================
+# Handlers: ipa_server_cleanup
+# =============================================================================
+
+- name: destroy kerberos ticket
+  ansible.builtin.command:
+    cmd: kdestroy
+  changed_when: false
+  ignore_errors: true

@@ -1,0 +1,16 @@
+---
+# =============================================================================
+# Handlers: ipa_client_unenroll
+# =============================================================================
+
+- name: restart sssd
+  ansible.builtin.service:
+    name: sssd
+    state: restarted
+  ignore_errors: true
+
+- name: restart oddjobd
+  ansible.builtin.service:
+    name: oddjobd
+    state: restarted
+  ignore_errors: true

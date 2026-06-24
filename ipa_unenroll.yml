@@ -1,0 +1,33 @@
+---
+# =============================================================================
+# Playbook: Desenrolar host(s) de FreeIPA / Red Hat IDM
+# =============================================================================
+# Uso:
+#   ansible-playbook -i inventory/hosts.ini ipa_unenroll.yml --ask-vault-pass
+#
+# Opciones extra:
+#   --limit <hostname>          Solo un host específico
+#   -e "ipa_remove_dns=false"   No eliminar registro DNS
+#   -e "ipa_force_unenroll=true" Forzar aunque haya errores
+# =============================================================================
+
+- name: "FASE 1 | Desenrolar cliente IPA"
+  hosts: ipa_clients
+  become: true
+  gather_facts: true
+  vars_files:
+    - vars/ipa_clients.yml
+
+  roles:
+    - role: ipa_client_unenroll
+
+
+- name: "FASE 2 | Eliminar host(s) del servidor IPA"
+  hosts: ipa_servers
+  become: true
+  gather_facts: false
+  vars_files:
+    - vars/ipa_servers.yml
+
+  roles:
+    - role: ipa_server_cleanup

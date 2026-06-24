@@ -1,0 +1,36 @@
+---
+# =============================================================================
+# Tasks: remove_host.yml — Elimina un host individual del servidor IPA
+# Variable requerida: ipa_target_host (FQDN del host)
+# =============================================================================
+
+- name: "[{{ ipa_target_host }}] Verificar si el host existe en IPA"
+  ansible.builtin.command:
+    cmd: ipa host-show {{ ipa_target_host }}
+  register: host_check
+  ignore_errors: true
+  changed_when: false
+
+- name: "[{{ ipa_target_host }}] Deshabilitar host (revoca keytab y servicios)"
+  ansible.builtin.command:
+    cmd: ipa host-disable {{ ipa_target_host }}
+  when: host_check.rc == 0
+  register: disable_result
+  changed_when: disable_result.rc == 0
+  ignore_errors: true
+
+- name: "[{{ ipa_target_host }}] Eliminar host de IPA"
+  ansible.builtin.command:
+    cmd: >
+      ipa host-del {{ ipa_target_host }}
+      {{ '--updatedns' if ipa_remove_dns else '' }}
+  when: host_check.rc == 0
+  register: delete_result
+  changed_when: delete_result.rc == 0
+
+- name: "[{{ ipa_target_host }}] Resultado"
+  ansible.builtin.debug:
+    msg: >
+      {{ '✓ Host ' + ipa_target_host + ' eliminado correctamente de IPA.'
+         if (host_check.rc == 0 and delete_result is defined and delete_result.rc == 0)
+         else '- Host ' + ipa_target_host + ' no encontrado, no se realizó acción.' }}

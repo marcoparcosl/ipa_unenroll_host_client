@@ -1,0 +1,31 @@
+---
+# =============================================================================
+# vars/ipa_servers.yml — Variables para el servidor IPA
+# =============================================================================
+# Encriptar con: ansible-vault encrypt vars/ipa_servers.yml
+# O cifrar solo la contraseña:
+#   ansible-vault encrypt_string 'TuPassword' --name 'vault_ipa_admin_password'
+# =============================================================================
+
+ipa_admin_user: "admin"
+vault_ipa_admin_password: !vault |
+  $ANSIBLE_VAULT;1.1;AES256
+  32333066363837353863363833646435333631373938656236343131666562613931326336313531
+  3331323531323736303830363831653764623265356239340a303364333564616265333832323531
+  64343434323166386662313566333563326431313862336131396536646462336336343866303834
+  3230616335626133370a316237653431643432376461323433383061666133386431623236323338
+  37326234353630663739623933393036666264393030613034653362306162653963613436333132
+  3561643263376631643838663438353432383638363030326666
+
+ipa_admin_password: "{{ vault_ipa_admin_password }}"
+
+# Eliminar registro DNS al borrar el host
+ipa_remove_dns: true
+
+# Lista de hosts a eliminar del servidor IPA.
+# Por defecto toma los hostnames del grupo ipa_clients del inventario.
+# Puedes sobreescribir con una lista explícita:
+# ipa_hosts_to_remove:
+#   - servidor1.ejemplo.com
+#   - servidor2.ejemplo.com
+ipa_hosts_to_remove: "{{ groups['ipa_clients'] | map('extract', hostvars, 'ansible_fqdn') | list }}"

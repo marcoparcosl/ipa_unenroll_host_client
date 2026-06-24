@@ -1,0 +1,17 @@
+---
+# =============================================================================
+# vars/ipa_clients.yml — Variables para los clientes a desenrolar
+# =============================================================================
+
+# Limpiar archivos residuales tras el unenroll
+ipa_cleanup_files: true
+
+# Forzar unenroll aunque haya errores parciales
+ipa_force_unenroll: false
+
+# Rutas a eliminar del cliente
+ipa_cleanup_paths:
+  - /etc/ipa
+  - /var/lib/ipa-client
+  - /etc/krb5.keytab
+  - /etc/krb5.conf.ipa_backup

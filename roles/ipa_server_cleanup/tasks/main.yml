@@ -1,0 +1,32 @@
+---
+# =============================================================================
+# Tasks: ipa_server_cleanup — Elimina hosts del servidor FreeIPA / Red Hat IDM
+# =============================================================================
+
+- name: Obtener ticket Kerberos de admin
+  ansible.builtin.shell: |
+    echo "{{ ipa_admin_password }}" | kinit {{ ipa_admin_user }}
+  no_log: true
+  changed_when: false
+
+- name: Procesar cada host a eliminar
+  ansible.builtin.include_tasks: remove_host.yml
+  loop: "{{ ipa_hosts_to_remove }}"
+  loop_control:
+    loop_var: ipa_target_host
+    label: "{{ ipa_target_host }}"
+
+- name: Generar reporte de desenrollamiento
+  ansible.builtin.template:
+    src: unenroll_report.j2
+    dest: /var/log/ipa_unenroll_report.txt
+    owner: root
+    group: root
+    mode: "0640"
+
+- name: Destruir ticket Kerberos
+  ansible.builtin.command:
+    cmd: kdestroy
+  changed_when: false
+  notify: destroy kerberos ticket
+  ignore_errors: true

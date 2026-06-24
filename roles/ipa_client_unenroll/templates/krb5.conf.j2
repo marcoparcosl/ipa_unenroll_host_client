@@ -1,0 +1,27 @@
+# krb5.conf — Configuración limpia post-unenroll de IPA
+# Generado por Ansible | rol: ipa_client_unenroll
+# Host: {{ inventory_hostname }}
+
+[logging]
+ default = FILE:/var/log/krb5libs.log
+ kdc = FILE:/var/log/krb5kdc.log
+ admin_server = FILE:/var/log/kadmind.log
+
+[libdefaults]
+ dns_lookup_realm = false
+ dns_lookup_kdc = false
+ ticket_lifetime = 24h
+ renew_lifetime = 7d
+ forwardable = true
+ default_realm =
+ # default_realm = MYREALM.EXAMPLE.COM  # Descomentar si se re-enrolla
+
+[realms]
+ # MYREALM.EXAMPLE.COM = {
+ #  kdc = kdc.example.com
+ #  admin_server = kdc.example.com
+ # }
+
+[domain_realm]
+ # .example.com = MYREALM.EXAMPLE.COM
+ # example.com = MYREALM.EXAMPLE.COM
